@@ -1,4 +1,5 @@
 using System.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Test_exam.Models;
@@ -76,7 +77,7 @@ public class ReviewController : ControllerBase
         }
         return new JsonResult(table);
     }
-    
+    [Authorize]
     [HttpPost]
     public JsonResult Post(Reviews reviews)
     {
@@ -109,7 +110,8 @@ public class ReviewController : ControllerBase
         }
         return new JsonResult("Added Successfully");
     }
-
+    
+    [Authorize]
     [HttpPut("{id}")]
     public JsonResult Put(Reviews reviews, int id)
     {
@@ -147,6 +149,7 @@ public class ReviewController : ControllerBase
         return new JsonResult("Updated Successfully");
     }
     
+    [Authorize]
     [HttpDelete("{id}")]
     public JsonResult Delete(int id)
     {
