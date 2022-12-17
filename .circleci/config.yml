@@ -1,16 +1,46 @@
 version: 2.1
+
+orbs:
+  windows: circleci/windows@2.2.0
+
 jobs:
-  build:
-    docker:
-      - image: cimg/base:2021.04
-        auth:
-          username: mydockerhub-user
-          password: $DOCKERHUB_PASSWORD
+  test:
+    description: Setup and run application tests
+    executor:
+      name: windows/default
     steps:
       - checkout
-      - run: 
-          name: "Second step"
-          command: 
-            ls -al
-            echo '^^^The files in your repo^^^'
-      
+      - restore_cache:
+          keys:
+            - dotnet-packages-v1-{{ checksum "SimpleCalc/SimpleCalc.csproj" }}
+      - run:
+          name: "Install project dependencies"
+          command: dotnet.exe restore
+      - save_cache:
+          paths:
+            - C:\Users\circleci\.nuget\packages
+          key: dotnet-packages-v1-{{ checksum "Test%20exam/Test%20exam.sln" }}
+      - run:
+          name: "Run Application Tests"
+          command: dotnet.exe test -v n --results-directory:test_coverage --collect:"Code Coverage"
+      - run:
+          name: "Print Working Directory"
+          command: pwd
+      - store_artifacts:
+          path: C:\Users\circleci\project\test_coverage
+  build:
+    description: Build application with Release configuration
+    executor:
+      name: windows/default
+    steps:
+      - checkout
+      - run:
+          name: "Build Application according to some given configuration"
+          command: dotnet.exe build --configuration Release
+workflows:
+  test_and_build:
+    jobs:
+      - test
+      - build:
+          requires:
+            - test
