@@ -34,7 +34,7 @@ export default class LoginForm extends React.Component {
       .catch((e) => {
         alert("Username or email already exists.");
       });
-    console.log(JSON.stringify(data, null, 2));
+    //console.log(JSON.stringify(data, null, 2));
   }
   render() {
     const initialValues = {

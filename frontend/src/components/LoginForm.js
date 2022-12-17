@@ -22,7 +22,7 @@ export default class LoginForm extends React.Component {
       .catch((e) => {
         alert("Wrong username/password");
       });
-    console.log(JSON.stringify(data, null, 2));
+    //console.log(JSON.stringify(data, null, 2));
   }
   render() {
     const initialValues = {

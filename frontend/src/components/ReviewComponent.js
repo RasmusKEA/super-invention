@@ -24,7 +24,7 @@ class ReviewComponent extends Component {
     this.retrieveReview(id);
 
     const user = AuthService.getCurrentUser();
-    console.log(AuthService.getCurrentUser());
+    //console.log(AuthService.getCurrentUser());
     if (user) {
       this.setState({
         currentUser: user,
@@ -38,8 +38,9 @@ class ReviewComponent extends Component {
   retrieveReview(id) {
     ReviewService.get(id)
       .then((response) => {
+        console.log(response);
         this.setState({
-          review: response.data[0],
+          review: response.data,
         });
         //console.log(response.data);
       })
@@ -104,19 +105,19 @@ class ReviewComponent extends Component {
           {review && (
             <div className="full-review">
               <img
-                src={review.image}
+                src={review.Image}
                 style={{ width: "800px", height: "400px" }}
                 alt="img"
               ></img>
 
-              <h3 className="review-title">{review.title}</h3>
+              <h3 className="review-title">{review.Title}</h3>
               <div className="title-div">
-                <p>{review.review}</p>
+                <p>{review.Review}</p>
               </div>
               <div className="rating-reasoning">
                 <div className="rr-left">
                   <CircularProgressbar
-                    value={review.rating}
+                    value={review.Rating}
                     styles={buildStyles({
                       textSize: "40px",
                       textColor: "black",
@@ -124,11 +125,11 @@ class ReviewComponent extends Component {
                     })}
                     strokeWidth={8}
                     maxValue={10}
-                    text={`${review.rating}`}
+                    text={`${review.Rating}`}
                   />
                 </div>
                 <div className="rr-right">
-                  <p>{review.ratingReasoning}</p>
+                  <p>{review.RatingReasoning}</p>
                 </div>
               </div>
             </div>

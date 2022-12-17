@@ -33,6 +33,7 @@ class EditReviewComponent extends Component {
   retrieveReview(id) {
     ReviewService.get(id)
       .then((response) => {
+        console.log(response);
         this.setState({
           title: response.data[0].title,
           review: response.data[0].review,
