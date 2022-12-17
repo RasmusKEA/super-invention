@@ -12,7 +12,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - dotnet-packages-v1-{{ checksum "SimpleCalc/SimpleCalc.csproj" }}
+            - dotnet-packages-v1-{{ checksum "Test%20exam/Test%20exam.sln" }}
       - run:
           name: "Install project dependencies"
           command: dotnet.exe restore
