@@ -10,17 +10,12 @@ jobs:
       name: windows/default
     steps:
       - checkout
-      - run:
-          name: Check Scripts
-          command: |
-           - sh find . -type f -name '*.sh' | wc -l
-           - sh find . -type f -name '*.sh' | xargs shellcheck --external-
       - restore_cache:
           keys:
             - dotnet-packages-v1-{{ checksum "Test exam/Test exam/Test exam.csproj" }}
       - run:
           name: "Install project dependencies"
-          command: dotnet.exe restore
+          command: -sh dotnet.exe restore
       - save_cache:
           paths:
             - C:\Users\circleci\.nuget\packages
