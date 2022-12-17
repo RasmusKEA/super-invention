@@ -10,24 +10,14 @@ jobs:
       name: windows/default
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dotnet-packages-v1-{{ checksum "Test exam/Test exam/Test exam.csproj" }}
       - run:
-          name: "Install project dependencies"
+          name: Restore
           command: dotnet restore
-      - save_cache:
-          paths:
-            - C:\Users\circleci\.nuget\packages
-          key: dotnet-packages-v1-{{ checksum "Test exam/Test exam/Test exam.csproj" }}
+          working_directory: TestExam
       - run:
-          name: "Run Application Tests"
-          command: dotnet.exe test -v n --results-directory:test_coverage --collect:"Code Coverage"
-      - run:
-          name: "Print Working Directory"
-          command: pwd
-      - store_artifacts:
-          path: C:\Users\circleci\project\test_coverage
+          name: Build
+          command: dotnet build -c Release
+          working_directory: TestExam
   build:
     description: Build application with Release configuration
     executor:
