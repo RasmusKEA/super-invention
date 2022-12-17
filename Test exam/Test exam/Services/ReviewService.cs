@@ -2,6 +2,7 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Test_exam.Models;
+using Test_exam.UnitTests;
 
 namespace Test_exam.Services;
 
@@ -13,6 +14,7 @@ public interface IReviewService
     IActionResult PostReview(Reviews reviews);
     IActionResult PutReview(Reviews reviews, int id);
     IActionResult DeleteReview(int id);
+    Reviews GetLatestReview();
 }
 
 public class ReviewService : IReviewService
@@ -46,12 +48,63 @@ public class ReviewService : IReviewService
             }
         }
 
+
         if (table.Rows.Count == 0)
         {
             return new NotFoundResult();
         }
-        
-        return new JsonResult(table);
+
+        var reviewList = (from DataRow row in table.Rows
+        select new Reviews
+        {
+            Id = (int) row["id"],
+            IdUser = (int) row["idUser"],
+            Review = (string) row["review"],
+            Title = (string) row["title"],
+            Rating = (int) row["rating"],
+            RatingReasoning = (string) row["ratingReasoning"],
+            Image = (string) row["image"],
+            Platform = (string) row["platform"]
+        }).ToList();
+
+        return new OkObjectResult(reviewList);
+    }
+
+    public Reviews GetLatestReview()
+    {
+        var query = @"SELECT * FROM reviews ORDER BY createdAt DESC LIMIT 1";
+        var table = new DataTable();
+        var sqlDataSource = _connectionString;
+        MySqlDataReader reader;
+        using (MySqlConnection mycon = new MySqlConnection(sqlDataSource))
+        {
+            mycon.Open();
+            using (MySqlCommand command = new MySqlCommand(query, mycon))
+            {
+                reader = command.ExecuteReader();
+                table.Load(reader);
+                mycon.Close();
+            }
+        }
+
+        if (table.Rows.Count == 0)
+        {
+            throw new Exception("Error");
+        }
+
+        var review = new Reviews()
+        {
+            Id = table.Rows[0].Field<int>("id"),
+            IdUser = table.Rows[0].Field<int>("idUser"),
+            Review = table.Rows[0].Field<string>("review"),
+            Title = table.Rows[0].Field<string>("title"),
+            Rating = table.Rows[0].Field<int>("rating"),
+            RatingReasoning = table.Rows[0].Field<string>("ratingReasoning"),
+            Platform = table.Rows[0].Field<string>("platform"),
+            Image = table.Rows[0].Field<string>("image"),
+        };
+
+        return review;
     }
 
     public IActionResult GetById(int id)
@@ -114,7 +167,7 @@ public class ReviewService : IReviewService
             return new NotFoundResult();
         }
 
-        return new JsonResult(table);
+        return new OkObjectResult(table);
     }
 
     public IActionResult PostReview(Reviews reviews)
@@ -209,7 +262,6 @@ public class ReviewService : IReviewService
                 mycon.Close();
             }
         }
-
         return new OkResult();
     }
 }

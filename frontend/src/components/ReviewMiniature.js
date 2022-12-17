@@ -21,6 +21,7 @@ export default class MiniatureList extends Component {
   retrieveReviews() {
     ReviewService.getAll()
       .then((response) => {
+        console.log(response);
         this.setState({
           reviews: response.data,
         });
@@ -38,14 +39,14 @@ export default class MiniatureList extends Component {
         {reviews &&
           reviews.map((review, index) => (
             <Link
-              to={"/review/" + review.id}
+              to={"/review/" + review.Id}
               style={{ textDecoration: "none" }}
               className="link"
               key={index}
             >
               <div className="review">
                 <div className="title-date-comments">
-                  <p>{review.title}</p>
+                  <p>{review.Title}</p>
                   <div className="date-comments">
                     <p>{Moment(review.createdAt).format("DD/MM/YYYY")}</p>
                   </div>
@@ -55,7 +56,7 @@ export default class MiniatureList extends Component {
                   <div className="vl"></div>
                   <div className="rating">
                     <CircularProgressbar
-                      value={review.rating}
+                      value={review.Rating}
                       styles={buildStyles({
                         textSize: "40px",
                         textColor: "black",
@@ -63,13 +64,13 @@ export default class MiniatureList extends Component {
                       })}
                       strokeWidth={8}
                       maxValue={10}
-                      text={review.rating}
+                      text={review.Rating}
                     />
                   </div>
 
                   <div className="image">
                     <img
-                      src={review.image}
+                      src={review.Image}
                       alt="example"
                       style={{ width: "200px", height: "100px" }}
                     />

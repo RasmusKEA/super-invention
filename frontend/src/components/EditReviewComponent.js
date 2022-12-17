@@ -35,12 +35,12 @@ class EditReviewComponent extends Component {
       .then((response) => {
         console.log(response);
         this.setState({
-          title: response.data[0].title,
-          review: response.data[0].review,
-          rating: response.data[0].rating,
-          ratingReasoning: response.data[0].ratingReasoning,
-          platform: response.data[0].platform,
-          image: response.data[0].image,
+          title: response.data.Title,
+          review: response.data.Review,
+          rating: response.data.Rating,
+          ratingReasoning: response.data.RatingReasoning,
+          platform: response.data.Platform,
+          image: response.data.Image,
         });
       })
       .catch((e) => {
